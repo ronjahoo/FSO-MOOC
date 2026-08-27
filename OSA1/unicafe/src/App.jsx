@@ -12,15 +12,25 @@ const App = () => {
       <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
       <button onClick={() => setBad(bad + 1)}>bad</button>
 
-      <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <All good={good} neutral={neutral} bad={bad}/>
-      <Average good={good} neutral={neutral} bad={bad}/>
-      <Positive good={good} neutral={neutral} bad={bad}/>
+      <Statistics good={good} neutral={neutral} bad={bad} />
+      
     </div>
   )
+}
+
+const Statistics = (props) => {
+  return (
+    <>
+      <h1>statistics</h1>
+      <p>good {props.good}</p>
+      <p>neutral {props.neutral}</p>
+      <p>bad {props.bad}</p>
+      <All good={props.good} neutral={props.neutral} bad={props.bad}/>
+      <Average good={props.good} neutral={props.neutral} bad={props.bad}/>
+      <Positive good={props.good} neutral={props.neutral} bad={props.bad}/>
+    </>
+  )
+
 }
 
 const All = (props) => {
