@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState('success')
 
   useEffect(() => {
     personService
@@ -20,8 +21,9 @@ const App = () => {
       })
   }, [])
 
-  const notify = (text) => {
+  const notify = (text, type = 'success') => {
     setMessage(text)
+    setMessageType(type)
     setTimeout(() => {
       setMessage(null)
     }, 5000)
@@ -30,15 +32,12 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     const existingPerson = persons.find(person => person.name === newName)
-
     if (existingPerson) {
       const confirmUpdate = window.confirm(
         `${newName} is already added to phonebook, replace the old number with a new one?`
       )
-
       if (confirmUpdate) {
         const changedPerson = { ...existingPerson, number: newNumber }
-
         personService
           .update(existingPerson.id, changedPerson)
           .then(returnedPerson => {
@@ -48,6 +47,13 @@ const App = () => {
             setNewName('')
             setNewNumber('')
             notify(`Changed number of ${changedPerson.name}`)
+          })
+          .catch(() => {
+            setPersons(persons.filter(person => person.id !== existingPerson.id))
+            notify(
+              `Information of ${existingPerson.name} has already been removed from server`,
+              'error'
+            )
           })
       }
       return
@@ -96,7 +102,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} type={messageType} />
       <Filter value={filter} onChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
