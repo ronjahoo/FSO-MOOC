@@ -1,5 +1,19 @@
+import { useState, useEffect } from 'react'
+import weatherService from './services/weather'
+import Weather from './Weather'
+
 const Country = ({ country }) => {
   const languages = Object.values(country.languages)
+  const [weather, setWeather] = useState(null)
+  const capital = country.capital[0]
+
+  useEffect(() => {
+    weatherService
+      .getWeather(capital)
+      .then(data => {
+        setWeather(data)
+      })
+  }, [capital])
 
   return (
     <div>
@@ -16,6 +30,8 @@ const Country = ({ country }) => {
       </ul>
 
       <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" />
+        
+      <Weather weather={weather} />
     </div>
   )
 }
